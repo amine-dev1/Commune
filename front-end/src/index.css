@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+.animated-background {
+  background: linear-gradient(
+    -45deg,
+    #262424,
+    #2a2828,
+    #232121,
+    #262424
+  );
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+
+.floating-circles::before,
+.floating-circles::after {
+  content: '';
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.02);
+  animation: float 10s infinite;
+}
+
+.floating-circles::before {
+  top: 10%;
+  left: 15%;
+  animation-delay: 0s;
+}
+
+.floating-circles::after {
+  bottom: 15%;
+  right: 10%;
+  animation-delay: -5s;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-20px) scale(1.1);
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
+
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+/* Swiper custom styles */
+.swiper-button-next,
+.swiper-button-prev {
+  color: white !important;
+}
+
+.swiper-pagination-bullet {
+  background: white !important;
+}
+
+.swiper-pagination-bullet-active {
+  background: #600C0C !important;
+}
