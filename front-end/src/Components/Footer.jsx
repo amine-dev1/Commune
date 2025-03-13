@@ -61,8 +61,8 @@ const Footer = () => {
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="h-6 w-6" />
-                <a href="mailto:contact@mairie.com" className="hover:text-white transition-colors">
-                  contact@mairie.com
+                <a href="mailto:contact@Commune.ma" className="hover:text-white transition-colors">
+                  contact@Commune.ma
                 </a>
               </div>
             </div>
@@ -72,7 +72,7 @@ const Footer = () => {
         {/* Copyright */}
         <div className="border-t border-white/20 mt-12 pt-8 text-center">
           <p className="text-sm">
-            © {new Date().getFullYear()} Municipalité de Ville Nouvelle - Tous droits réservés
+            © {new Date().getFullYear()} Municipalité de Ville Mohammedia - Tous droits réservés
           </p>
           <p className="text-xs mt-2 opacity-75">
             Conçu avec ❤️ pour nos concitoyens

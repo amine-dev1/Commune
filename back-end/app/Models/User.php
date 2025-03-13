@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Enums\RoleEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -21,7 +23,25 @@ class User extends Authenticatable
         'email',
         'password',
     ];
+    protected $casts = [
+        'role' => RoleEnum::class,
+    ];
 
+    // Relations
+    public function complaints()
+    {
+        return $this->hasMany(Complaint::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(ComplaintComment::class);
+    }
+
+    public function statusHistories()
+    {
+        return $this->hasMany(ComplaintStatusHistory::class);
+    }
     /**
      * The attributes that should be hidden for serialization.
      *
