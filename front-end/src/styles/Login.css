@@ -1,103 +1,79 @@
-/* login.css */
-
 .animated-background {
-  background: linear-gradient(135deg, #750f0f 0%, #600C0C 50%, #400808 100%);
+  background: linear-gradient(-45deg, #600c0c, #8a1c1c, #c0392b, #e74c3c);
   background-size: 400% 400%;
-  animation: gradientAnimation 15s ease infinite;
+  animation: gradient 15s ease infinite;
 }
 
-@keyframes gradientAnimation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .floating-circles::before,
 .floating-circles::after {
   content: '';
   position: absolute;
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
-  opacity: 0.2;
-  animation-duration: 15s;
-  animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
+  animation: float 20s infinite;
 }
 
 .floating-circles::before {
-  width: 300px;
-  height: 300px;
-  background-color: rgba(255, 255, 255, 0.2);
-  top: -100px;
-  right: -50px;
-  animation-name: float1;
+  width: 200px;
+  height: 200px;
+  top: 20%;
+  left: 10%;
 }
 
 .floating-circles::after {
-  width: 400px;
-  height: 400px;
-  background-color: rgba(0, 0, 0, 0.2);
-  bottom: -200px;
-  left: -100px;
-  animation-name: float2;
+  width: 150px;
+  height: 150px;
+  top: 60%;
+  right: 15%;
 }
 
-@keyframes float1 {
-  0% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  50% {
-    transform: translate(30px, 30px) rotate(180deg);
-  }
-  100% {
-    transform: translate(0, 0) rotate(360deg);
-  }
-}
-
-@keyframes float2 {
-  0% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  50% {
-    transform: translate(-30px, 20px) rotate(-180deg);
-  }
-  100% {
-    transform: translate(0, 0) rotate(-360deg);
-  }
+@keyframes float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-20px) scale(1.1); }
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.5s ease-in-out;
+  animation: fadeIn 0.5s ease-in;
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Card hover animation */
 .hover\:scale-\[1\.01\]:hover {
+  transform: scale(1.01);
   transition: all 0.3s ease;
 }
 
-/* Input field focus animation */
 input:focus {
   transition: all 0.2s ease-in-out;
   box-shadow: 0 0 0 3px rgba(96, 12, 12, 0.2);
 }
 
-/* Button hover animation */
 button:hover {
+  filter: brightness(90%);
   transition: all 0.3s ease;
+}
+
+/* Existing dashboard styles */
+.min-h-screen.bg-gray-100 {
+  min-height: 100vh;
+  background-color: #f3f4f6;
+}
+
+.container.mx-auto {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.bg-\[\#600C0C\] {
+  background-color: #600C0C;
 }

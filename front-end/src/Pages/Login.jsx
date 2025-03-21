@@ -4,50 +4,42 @@ import { login } from "../api/auth";
 import { LogIn, Mail, Lock } from 'lucide-react';
 import '../styles/login.css';
 
-const Login = () => {
+const Login = ({ checkAuth }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Error message handling (2.5s)
   useEffect(() => {
-    let timeoutId;
     if (error) {
-      timeoutId = setTimeout(() => setError(''), 2500);
+      const timeout = setTimeout(() => setError(''), 2500);
+      return () => clearTimeout(timeout);
     }
-    return () => clearTimeout(timeoutId);
   }, [error]);
-
-  // Success handling and redirection (3s)
-  useEffect(() => {
-    let timeoutId;
-    if (success) {
-      timeoutId = setTimeout(() => {
-        setSuccess('');
-        navigate('/dashboard'); //redirect to dashboard
-      }, 3000);
-    }
-    return () => clearTimeout(timeoutId);
-  }, [success, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
+    setIsSubmitting(true);
+    
     try {
-      const data = await login ({ email, password });
-      localStorage.setItem('user', JSON.stringify(data.user));
-      setSuccess('Connexion réussie ! Redirection vers le tableau de bord... ✔️');
-      // console.log(data.user.name); for checking fetching Results . 
+      await login({ email, password });
+      setSuccess('Connexion réussie ! Redirection en cours... ✔️');
       setError('');
-      // Reset form
       setEmail('');
       setPassword('');
+
+      setTimeout(async () => {
+        const isAuthenticated = await checkAuth();
+        if (isAuthenticated) navigate('/dashboard');
+      }, 1500);
+
     } catch (err) {
-      setError(err.response?.data?.message || 'Email ou mot de passe incorrect ❌');
+      setError(err.message || 'Identifiants incorrects ❌');
       setSuccess('');
-      console.error(err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -57,7 +49,6 @@ const Login = () => {
       <div className="relative min-h-screen flex items-center justify-center p-4">
         <div className="w-full max-w-md mt-10">
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden transform transition-all duration-300 hover:scale-[1.01]">
-            {/* Header */}
             <div className="bg-[#600C0C] px-8 py-6 text-center">
               <h2 className="text-2xl font-bold text-white flex items-center justify-center gap-2">
                 <LogIn className="w-6 h-6" />
@@ -65,10 +56,8 @@ const Login = () => {
               </h2>
             </div>
 
-            {/* Form */}
             <form onSubmit={handleLogin} className="p-10 space-y-7">
               <div className="space-y-5">
-                {/* Email Field */}
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                     <Mail className="h-6 w-6 text-[#600C0C]" />
@@ -83,7 +72,6 @@ const Login = () => {
                   />
                 </div>
 
-                {/* Password Field */}
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                     <Lock className="h-6 w-6 text-[#600C0C]" />
@@ -99,32 +87,31 @@ const Login = () => {
                 </div>
               </div>
 
-              {/* Forgot Password Link */}
               <div className="text-right">
                 <a href="/forgot-password" className="text-sm text-[#600C0C] hover:underline">
                   Mot de passe oublié?
                 </a>
               </div>
 
-              {/* Submit Button */}
               <button
                 type="submit"
-                className="cursor-pointer w-full bg-[#600C0C] text-white py-3 px-6 rounded-lg hover:bg-[#500A0A] transform hover:scale-[1.01] transition-all duration-200 flex items-center justify-center gap-3 text-lg font-semibold"
+                disabled={isSubmitting}
+                className="w-full bg-[#600C0C] text-white py-3 px-6 rounded-lg hover:bg-[#500A0A] transition-all duration-200 flex items-center justify-center gap-3 text-lg font-semibold disabled:opacity-70"
               >
-                <LogIn className="w-6 h-6" />
-                Se connecter
+                {isSubmitting ? (
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                ) : (
+                  <>
+                    <LogIn className="w-6 h-6" />
+                    Se connecter
+                  </>
+                )}
               </button>
 
-              {/* Status Messages */}
-              {error && (
-                <p className="text-red-600 text-center text-base mt-3 animate-fade-in">{error}</p>
-              )}
-              {success && (
-                <p className="text-green-600 text-center text-base mt-3 animate-fade-in">{success}</p>
-              )}
+              {error && <p className="text-red-600 text-center animate-fade-in">{error}</p>}
+              {success && <p className="text-green-600 text-center animate-fade-in">{success}</p>}
             </form>
 
-            {/* Footer with register link */}
             <div className="px-8 py-4 bg-gray-50 border-t border-gray-100">
               <p className="text-sm text-center text-gray-600">
                 Pas encore de compte?{' '}
