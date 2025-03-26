@@ -30,8 +30,8 @@ class ComplaintsController extends Controller
         $query = Complaint::with(['category', 'user']);
         
         // Filter by user role
-        if ($user->role === 'citizen') {
-            // Citizens can only see their own complaints
+        if ($user->role === 'client') {
+            // clients can only see their own complaints
             $query->where('user_id', $user->id);
         } elseif ($request->has('user_id') && ($user->role === 'admin' || $user->role === 'moderator')) {
             // Admins/moderators can filter by user
@@ -75,7 +75,7 @@ class ComplaintsController extends Controller
         $user = Auth::user();
         $complaint = Complaint::with(['attachments', 'category', 'user', 'statusHistory.user', 'comments' => function($query) use ($user) {
             // Only show internal comments to admin/moderator
-            if ($user->role === 'citizen') {
+            if ($user->role === 'client') {
                 $query->where('is_internal', false);
             }
         }])->find($id);
@@ -85,7 +85,7 @@ class ComplaintsController extends Controller
         }
         
         // Check if the user is authorized to view this complaint
-        if ($user->role === 'citizen' && $complaint->user_id !== $user->id) {
+        if ($user->role === 'client' && $complaint->user_id !== $user->id) {
             return response()->json(['message' => 'Unauthorized to access this complaint'], 403);
         }
         
@@ -174,12 +174,12 @@ class ComplaintsController extends Controller
         $user = Auth::user();
         
         // Only the owner or admin/moderator can update
-        if ($user->role === 'citizen' && $complaint->user_id !== $user->id) {
+        if ($user->role === 'client' && $complaint->user_id !== $user->id) {
             return response()->json(['message' => 'Unauthorized to update this complaint'], 403);
         }
         
-        // Citizens can only update their complaints if they're still pending
-        if ($user->role === 'citizen' && $complaint->status !== StatusEnum::Pending) {
+        // clients can only update their complaints if they're still pending
+        if ($user->role === 'client' && $complaint->status !== StatusEnum::Pending) {
             return response()->json(['message' => 'Cannot update complaint that is already being processed'], 403);
         }
         
@@ -288,12 +288,12 @@ class ComplaintsController extends Controller
         $user = Auth::user();
         
         // Only the owner or admin can delete
-        if ($user->role === 'citizen' && $complaint->user_id !== $user->id) {
+        if ($user->role === 'client' && $complaint->user_id !== $user->id) {
             return response()->json(['message' => 'Unauthorized to delete this complaint'], 403);
         }
         
-        // Citizens can only delete their complaints if they're still pending
-        if ($user->role === 'citizen' && $complaint->status !== StatusEnum::Pending) {
+        // clients can only delete their complaints if they're still pending
+        if ($user->role === 'client' && $complaint->status !== StatusEnum::Pending) {
             return response()->json(['message' => 'Cannot delete complaint that is already being processed'], 403);
         }
         
@@ -335,7 +335,7 @@ class ComplaintsController extends Controller
         $user = Auth::user();
         
         // Check if user can comment on this complaint
-        if ($user->role === 'citizen' && $complaint->user_id !== $user->id) {
+        if ($user->role === 'client' && $complaint->user_id !== $user->id) {
             return response()->json(['message' => 'Unauthorized to comment on this complaint'], 403);
         }
         
@@ -346,7 +346,7 @@ class ComplaintsController extends Controller
         
         // Only admin/moderator can create internal comments
         $isInternal = false;
-        if ($user->role !== 'citizen' && isset($validated['is_internal'])) {
+        if ($user->role !== 'client' && isset($validated['is_internal'])) {
             $isInternal = $validated['is_internal'];
         }
         
@@ -387,7 +387,7 @@ class ComplaintsController extends Controller
         $user = Auth::user();
         
         // Only comment owner or admin/moderator can delete
-        if ($user->role === 'citizen' && $comment->user_id !== $user->id) {
+        if ($user->role === 'client' && $comment->user_id !== $user->id) {
             return response()->json(['message' => 'Unauthorized to delete this comment'], 403);
         }
         
@@ -419,7 +419,7 @@ class ComplaintsController extends Controller
         $user = Auth::user();
         
         // Check if user can view attachments
-        if ($user->role === 'citizen' && $complaint->user_id !== $user->id) {
+        if ($user->role === 'client' && $complaint->user_id !== $user->id) {
             return response()->json(['message' => 'Unauthorized to view these attachments'], 403);
         }
         
@@ -447,7 +447,7 @@ class ComplaintsController extends Controller
         $user = Auth::user();
         
         // Check if user can download attachment
-        if ($user->role === 'citizen' && $complaint->user_id !== $user->id) {
+        if ($user->role === 'client' && $complaint->user_id !== $user->id) {
             return response()->json(['message' => 'Unauthorized to download this attachment'], 403);
         }
         
@@ -479,12 +479,12 @@ class ComplaintsController extends Controller
         $user = Auth::user();
         
         // Only the owner or admin/moderator can delete attachments
-        if ($user->role === 'citizen' && $complaint->user_id !== $user->id) {
+        if ($user->role === 'client' && $complaint->user_id !== $user->id) {
             return response()->json(['message' => 'Unauthorized to delete this attachment'], 403);
         }
         
-        // Citizens can only delete attachments for pending complaints
-        if ($user->role === 'citizen' && $complaint->status !== StatusEnum::Pending) {
+        // clients can only delete attachments for pending complaints
+        if ($user->role === 'client' && $complaint->status !== StatusEnum::Pending) {
             return response()->json(['message' => 'Cannot delete attachment from complaint that is already being processed'], 403);
         }
         
@@ -523,7 +523,7 @@ class ComplaintsController extends Controller
         $user = Auth::user();
         
         // Check if user can view status history
-        if ($user->role === 'citizen' && $complaint->user_id !== $user->id) {
+        if ($user->role === 'client' && $complaint->user_id !== $user->id) {
             return response()->json(['message' => 'Unauthorized to view this status history'], 403);
         }
         
@@ -545,7 +545,7 @@ class ComplaintsController extends Controller
     {
         $user = Auth::user();
         
-        if ($user->role === 'citizen') {
+        if ($user->role === 'client') {
             return response()->json(['message' => 'Unauthorized to access statistics'], 403);
         }
         

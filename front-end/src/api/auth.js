@@ -35,7 +35,10 @@ export const fetchUser = async () => {
     return {
       name: response.data.name,
       email: response.data.email,
-      role: response.data.role
+      role: response.data.role,
+      adress : response.data.address,
+      cin : response.data.cin,
+      phone : response.data.phone
     };
     
   } catch (error) {

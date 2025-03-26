@@ -59,12 +59,20 @@ class AuthController extends Controller
     }
 
     public function logout(Request $request)
-{
-    // For token-based auth with Sanctum
-     $request->user()->currentAccessToken()->delete();
+    {
+        try {
+            $request->user()->currentAccessToken()->delete();
     
-        return response()->json([
-            'message' => 'Logged out successfully'
-    ]);
-}
+            return response()->json([
+                'message' => 'Logged out successfully'
+            ])->header('Access-Control-Allow-Origin', 'http://localhost:5173')
+              ->header('Access-Control-Allow-Credentials', 'true');
+    
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Logout failed',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

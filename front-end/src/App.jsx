@@ -16,7 +16,10 @@ function App() {
       setUser({
         name: userData.name,
         email: userData.email,
-        role: userData.role
+        role: userData.role,
+        adress : userData.adress,
+        phone : userData.phone,
+        cin : userData.cin
       });
       return true;
     } catch (error) {
